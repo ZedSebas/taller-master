@@ -1,0 +1,9 @@
+[rocky]
+tallerrocky ansible_host=192.168.10.4
+
+[ubuntu]
+tallerubuntu ansible_host=192.168.10.12
+
+[linux:children]
+rocky
+ubuntu
