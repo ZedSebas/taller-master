@@ -201,11 +201,136 @@ Playbook iniciador el cual lista los roles que serán ejecutados en los miembros
 
 # Application
 
+en lo que se aprende automatización de podman, generación de imagen y creación de instancia de la misma se realiza en bastión configuración manual donde disponibilizar la aplicación para el caso de no llegar a tiempo
+
 ```sh
-tipoDB=mariadb
-jdbcURL=jdbc:mariadb://localhost:3306/todo
-jdbcUsername=todo
-jdbcPassword=ZSe4RFvP84
+> #loadkeys es
+> #dnf update -y
+
+////if dnf error with packages bucle
+//# dnf clean all
+//# dnf check
+//# dnf check-update
+//# dnf update -y
+------------ 
+
+//Preparar interfaces de red 
+> #nmcli
+
+//establecer metodo, ipv4 y deshabilitar ipv6
+> #nmcli connection modify enp0s8 ipv6.method disabled
+
+> #systemctl restart NetworkManager
+------------
+
+> #dnf install samba samba-common samba-client -y
+
+> #mv /etc/samba/smb.conf /etc/samba/smb.conf.old
+
+> #mkdir -p /srv/samba/repo
+
+> #chmod -R 775 /srv/samba/repo
+> #chown -R nobody:nobody /srv/samba/repo
+> #chcon -t samba_share_t /srv/samba/repo
+
+------------
+> #vi /etc/samba/smb.conf
+	[Global]
+	server string = Samba Server $v
+	netbios name = rocky linux 9.2
+	security = user
+	map to guest = bad user
+	dns proxy = no
+	
+	[Public]
+	path = /srv/samba/repo
+	browsable = yes
+	writable = yes
+	guest ok = yes
+	read only = no
+------------
+// verificar
+> #testparm
+
+------------
+//colocar las interfaces en la zona correcta
+> #firewall-cmd --zone=public --add-service=samba --permanent
+> #firewall-cmd --zone=internal --add-interface=enp0s3 --permanent
+> #firewall-cmd --reload
+
+> #systemctl enable smb --now
+> #systemctl status smb
+
+> #systemctl enable nmb --now
+> #systemctl status nmb
+
+------------
+//Se descargan a compartido el repositorio de ejemplo y todo.war proporcionado
+	https://github.com/emverdes/docker-tomcat-tutorial
+
+//Acceso mediante tarjeta de red temporal para compartir
+	\\192.168.0.253\Public
+
+//Destino de compartido 
+	/srv/samba/repo/
+
+//Instalación de paquete unzip para archivos comprimidos
+> #dnf install unzip -y
+
+//Se descomprime
+> #unzip /srv/samba/repo/docker-tomcat-tutorial-master.zip -d /
+
+//Se modifica nombre de la carpeta extraida
+> #mv docker-tomcat-tutorial-master docker-container
+
+//Se intercambia sample.war por todo.war
+> #mv /srv/samba/repo/todo.war /docker-container/todo.war
+> #mv /docker-container/sample.war /srv/samba/repo/sample.war
+
+//Se edita Dockerfile basado en el contenido de https://dlcdn.apache.org/tomcat/ 
+> #vi /docker-container/Dockerfile
+	//se modifican referencias a v8.5.88 por existente v8.5.91
+	//sample.war por todo.war
+	//puerto de exposición 8080 por 8008
+
+------------
+//Información de versión disponible 
+> #dnf info podman
+
+> #dnf install podman
+
+//Consulta de intancias de contenedores activos
+> #podman ps -a
+
+> #cd docker-container
+
+//Se construye imagen de nombre "todo" para Docker de acuerdo a las instrucciones de Dockerfile
+> #podman build -f Dockerfile -t todo:1
+
+//Se crea una intancia del contenedor todo de nommbre web1 la cual será accesible mediante el puerto 8008
+> #podman run -it --rm -d -p 8008:8080 --name web1 todo:1
+
+//Se puede crear una segunda intancia del contenedor todo de nommbre web2 accesible mediante el puerto 8009
+> #podman run -it --rm -d -p 8009:8080 --name web2 todo:1
+
+//Detener 
+> #podman stop web2
+
+//Limpiar resultado de ps -a de procesos finalizados 
+> #podman rm $(podman ps --filter "status=exited" -q)
+
+//Se prueba la web en http://192.168.10.40:8008/todo/
+
+------------
+//Se crea carpeta config y archivo de configuración 
+
+> #cd /opt
+> #mkdir config
+> #vi app.properties
+	tipoDB=mysql
+	jdbcURL=jdbc:mysql://192.168.10.12:3306/todo
+	jdbcUsername=todo
+	jdbcPassword=ZSe4RFvP84
 ```
 
 # WebServer
@@ -215,7 +340,7 @@ dentro del rol webserver se crea usando 'vi' en /files el archivo tomcat.service
 **/webserver/files/tomcat.service**
 ```sh
 [Unit]
-Description=Tomcat 9.0 servlet container para Rocky Linux 8
+Description=Tomcat 8.5.91 servlet container para Rocky Linux 9.2
 After=network.target
 
 [Service]
@@ -233,7 +358,7 @@ ExecStop=/opt/tomcat/bin/shutdown.sh
 WantedBy=multi-user.target
 ```
 
-usando 'vi' en /tasks se edita el archivo main.yml
+usando 'vi' en /tasks se edita el archivo main.yml prestando atención a la disponibilidad de la versión de java y apache-tomcat 
 
 **/webserver/tasks/main.yml**
 ```sh
