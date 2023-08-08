@@ -672,8 +672,8 @@ Validación
 
 ## Bibliografía
 
-> Material del curso - https://aulas.ort.edu.uy/course/view.php?id=4139
-> Proyecto Galaxy - https://galaxy.ansible.com/home
-> Documentación de Ansible - https://docs.ansible.com/
+> Material del curso - https://aulas.ort.edu.uy/course/view.php?id=4139  <br />
+> Proyecto Galaxy - https://galaxy.ansible.com/home  <br />
+> Documentación de Ansible - https://docs.ansible.com/  <br />
 
 
