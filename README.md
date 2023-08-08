@@ -181,11 +181,14 @@ para administrar separadamente un inventario en el que se pueden generar grupos
 
 [![Captura-SSH014.png](https://i.postimg.cc/gJJ7y27c/Captura-SSH014.png)](https://postimg.cc/9461CCVs)
 
+
 Verificación <br />
 > #git status -s <br />
 > #git push origin master <br />
 
+
 [![Captura-Git-009.png](https://i.postimg.cc/T3JMfNTL/Captura-Git-009.png)](https://postimg.cc/NKFPx49B)
+
 
 ## Creación de repositorios para roles de tareas requeridas
 
@@ -207,7 +210,7 @@ Playbook iniciador el cual lista los roles que serán ejecutados en los miembros
 
 # Application
 
-en lo que se aprende automatización de podman, generación de imagen y creación de instancia de la misma se realiza en bastión configuración manual donde disponibilizar la aplicación para el caso de no llegar a tiempo
+en lo que se aprende la automatización de podman, generación de imagen y creación de instancia se realiza en bastión configuración manual donde disponibilizar la aplicación para el caso de no llegar a tiempo
 
 ```sh
 > #loadkeys es
@@ -472,7 +475,7 @@ CREATE TABLE `users` (
   `username` varchar(250) DEFAULT NULL,
   `password` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 CREATE TABLE `todos` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -482,7 +485,7 @@ CREATE TABLE `todos` (
   `username` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8;
 ```
 
 usando 'vi' en /vars se edita el archivo main.yml
