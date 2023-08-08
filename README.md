@@ -39,3 +39,11 @@ Tareas a realizar mediante playbook con Ansible:
  - El playbook y todos los archivos necesarios deben ser subidos a un repositorio git llamado “tallerjulio2023”.
 
 # Cumplimiento
+
+## Instalación y configuración de equipos virtuales
+
+Se instalan 3 servidores virtuales:
+
+ - Taller Bastion **Servidor de controlador**
+ - Taller Rocky **Servidor Web y de Aplicación**
+ - Taller Ubuntu **Servidor de Base de Datos**
