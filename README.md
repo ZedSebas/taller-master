@@ -187,3 +187,31 @@ Verificación
 > #ansible-galaxy init webserver <br />
 > #ansible-galaxy init database <br />
 > #ansible-galaxy init firewall <br />
+
+## Playbooks
+
+> #mkdir /home/ansible/playbooks <br />
+> #vi tallerlab.yml <br />
+
+[![Captura-SSH015.png](https://i.postimg.cc/NGJBPYKZ/Captura-SSH015.png)](https://postimg.cc/5jCh6hqm)
+
+Playbook iniciador el cual lista los roles que serán ejecutados en los miembros del grupo linux
+
+## Roles
+
+# Application
+
+# WebServer
+
+# DataBase
+
+# Firewall
+
+## Ejecución de playbook tallerlab
+
+> #ansible-playbook tallerlab.yml -i /home/ansible/inventario-taller 
+
+## Aplicación 
+
+Verificación
+
