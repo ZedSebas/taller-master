@@ -207,11 +207,16 @@ Playbook iniciador el cual lista los roles que serán ejecutados en los miembros
 
 dentro del rol database se crean usando 'vi' en /files los archivos app.properties y tablas.sql
 
+**/files/app.properties**
+```sh
 tipoDB=mariadb
 jdbcURL=jdbc:mariadb://localhost:3306/todo
 jdbcUsername=todo
 jdbcPassword=ZSe4RFvP84
+```
 
+**/files/tablas.sql**
+```sh
 CREATE TABLE `users` (
   `id` int(3) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(20) DEFAULT NULL,
@@ -230,9 +235,12 @@ CREATE TABLE `todos` (
   `title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
- 
+```
+
 usando 'vi' en /vars se edita el archivo main.yml
 
+**/vars/main.yml**
+```sh
 ---
 mysql_root_password: "Pass.123"
 mariadb_socket: /run/mysqld/mysqld.sock
@@ -244,9 +252,12 @@ create_database: True
 create_db_user: True
 import_sql_file: True
 deny_remote_connections: True
+```
 
 usando 'vi' en /task se edita el archivo main.yml
 
+**/task/main.yml**
+```sh
 ---
 - name: Instalar Mariadb en Rocky
   package:
@@ -346,6 +357,7 @@ usando 'vi' en /task se edita el archivo main.yml
     user: root
     host: localhost
     state: absent
+```
 
 # Firewall
 
