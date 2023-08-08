@@ -660,8 +660,20 @@ Verificación
 
 [![Captura-Ansible-001.png](https://i.postimg.cc/cJChxwrS/Captura-Ansible-001.png)](https://postimg.cc/CZykJZGP)
 
+Corrección de errores
+
 [![Captura-Ansible-002.png](https://i.postimg.cc/7ZmXrmP9/Captura-Ansible-002.png)](https://postimg.cc/yD30FhZ3)
 
+Depuración
+
 [![Captura-Ansible-003.png](https://i.postimg.cc/zfQjVvgR/Captura-Ansible-003.png)](https://postimg.cc/nsv7WHTH)
+
+Validación
+
+## Bibliografía
+
+> Material del curso - https://aulas.ort.edu.uy/course/view.php?id=4139
+> Proyecto Galaxy - https://galaxy.ansible.com/home
+> Documentación de Ansible - https://docs.ansible.com/
 
 
