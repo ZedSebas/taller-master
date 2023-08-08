@@ -323,13 +323,14 @@ en lo que se aprende automatización de podman, generación de imagen y creació
 //Limpiar resultado de ps -a de procesos finalizados 
 > #podman rm $(podman ps --filter "status=exited" -q)
 
-//Se prueba la web en http://192.168.10.40:8008/todo/
+//Se prueba la web en http://192.168.0.253:8008/todo/
 
 ------------
 //Se crea carpeta config y archivo de configuración 
 
 > #cd /opt
 > #mkdir config
+> #cd /config
 > #vi app.properties
 	tipoDB=mysql
 	jdbcURL=jdbc:mysql://192.168.10.12:3306/todo
