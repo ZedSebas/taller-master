@@ -201,7 +201,117 @@ Playbook iniciador el cual lista los roles que serán ejecutados en los miembros
 
 # Application
 
+```sh
+tipoDB=mariadb
+jdbcURL=jdbc:mariadb://localhost:3306/todo
+jdbcUsername=todo
+jdbcPassword=ZSe4RFvP84
+```
+
 # WebServer
+
+dentro del rol webserver se crea usando 'vi' en /files el archivo tomcat.service
+
+**/webserver/files/tomcat.service**
+```sh
+[Unit]
+Description=Tomcat 9.0 servlet container para Rocky Linux 8
+After=network.target
+
+[Service]
+User=tomcat
+Group=tomcat
+WorkingDirectory=/opt/tomcat
+Environment=JRE_HOME=/opt/jdk
+Environment=JAVA_HOME=/opt/jdk
+Environment=CATALINA_BASE=/opt/tomcat
+Environment=CATALINA_HOME=/opt/tomcat
+ExecStart=/opt/tomcat/bin/catalina.sh run
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+usando 'vi' en /tasks se edita el archivo main.yml
+
+**/webserver/tasks/main.yml**
+```sh
+---
+- name: Actualizacion de Paquetes Ubuntu
+  apt:
+   upgrade: yes
+   update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Actualizacion de Paquetes Rocky
+  dnf:
+   name: "*"
+   state: latest
+  when: ansible_distribution == "Rocky"
+  
+- name: Instalar tar para descomprimir
+  ansible.builtin.yum:
+    name: tar
+    state: latest
+  when: ansible_distribution == "Rocky"
+
+- name: Crear directorio JDK 1.8
+file:
+path: /opt/jdk
+recurse: yes
+
+- name: Descargar y descomprimir java 1.8
+  unarchive:
+    src: https://builds.openlogic.com/downloadJDK/openlogic-openjdk/8u332-b09/openlogic-openjdk-8u332-b09-linux-x64.tar.gz
+    dest: /opt/jdk
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+  
+- name: Crear usuario Tomcat
+  user:
+   name: tomcat
+
+- name: Crear grupo Tomcat
+  group:
+   name: tomcat
+  
+- name: Crear Tomcat Directorio
+  file:
+   path: /opt/tomcat
+   owner: tomcat
+   group: tomcat
+   mode: 755
+   recurse: yes
+  
+- name: Descargar Tomcat
+  unarchive:
+  src: https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.91/bin/apache-tomcat-8.5.91.tar.gz
+  dest: /opt/tomcat
+  remote_src: yes
+  extra_opts: [--strip-components=1]
+  
+- name: Cambiar permisos de directorio Tomcat
+  file:
+   path: /opt/tomcat
+   owner: tomcat
+   group: tomcat
+   mode: "u+rwx,g+rx,o=rx"
+   recurse: yes
+   state: directory
+  
+- name: Copiar archivo de servicio Tomcat
+  copy:
+   src: /home/ansible/webserver/files/tomcat.service
+   dest: /etc/systemd/system/
+   mode: 0755
+
+- name: Iniciar y habilitar el servicio Tomcat
+  systemd:
+    name: tomcat
+    state: started
+    daemon_reload: true
+```
 
 # DataBase
 
@@ -254,9 +364,9 @@ import_sql_file: True
 deny_remote_connections: True
 ```
 
-usando 'vi' en /task se edita el archivo main.yml
+usando 'vi' en /tasks se edita el archivo main.yml
 
-**/database/task/main.yml**
+**/database/tasks/main.yml**
 ```sh
 ---
 - name: Instalar Mariadb en Rocky
