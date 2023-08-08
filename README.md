@@ -205,6 +205,148 @@ Playbook iniciador el cual lista los roles que serán ejecutados en los miembros
 
 # DataBase
 
+dentro del rol database se crean usando 'vi' en /files los archivos app.properties y tablas.sql
+
+tipoDB=mariadb
+jdbcURL=jdbc:mariadb://localhost:3306/todo
+jdbcUsername=todo
+jdbcPassword=ZSe4RFvP84
+
+CREATE TABLE `users` (
+  `id` int(3) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(20) DEFAULT NULL,
+  `last_name` varchar(20) DEFAULT NULL,
+  `username` varchar(250) DEFAULT NULL,
+  `password` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `todos` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  `is_done` bit(1) NOT NULL,
+  `target_date` datetime(6) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ 
+usando 'vi' en /vars se edita el archivo main.yml
+
+---
+mysql_root_password: "Pass.123"
+mariadb_socket: /run/mysqld/mysqld.sock
+database: "todo"
+priviliges: "ALL"
+db_user_name: "todo"
+db_user_password: "ZSe4RFvP84"
+create_database: True
+create_db_user: True
+import_sql_file: True
+deny_remote_connections: True
+
+usando 'vi' en /task se edita el archivo main.yml
+
+---
+- name: Instalar Mariadb en Rocky
+  package:
+    name: mariadb-server, python3-PyMySQL
+    state: latest
+  when: ansible_distribution == "Rocky"
+
+- name: Instalar Mariadb en Ubuntu
+  apt:
+    name: mariadb-server, python3-pymysql
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: Iniciar y ejecutar Mariadb
+  service:
+    name: mariadb
+    enabled: true
+    state: started
+
+- name: Establecer contraseña root para Rocky
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    user: root
+    check_implicit_admin: true
+    password: "{{ mysql_root_password }}"
+    host: localhost
+  #notify: Flush Priviliges
+  when: ansible_distribution == "Rocky"
+
+- name: Establecer contrasena root Para Ubuntu
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    host: "{{ item }}"
+    login_user: root
+    login_unix_socket: "{{ mariadb_socket }}"
+    state: present
+  with_items:
+    - 127.0.0.1
+    - localhost
+  #notify: Flush Priviliges
+  when: ansible_distribution == "Ubuntu"
+
+- name: Copiar archivo de conexion
+  copy:
+    src: /home/ansible/database/files/app.properties
+    dest: /opt/config
+    mode: 0755
+
+- name: Creacion de base de datos
+  mysql_db:
+    name: "{{ database }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    state: present
+  when:
+    - create_database
+    - database is defined
+
+- name: Crear usuario para base de datos
+  mysql_user:
+    name: "{{ db_user_name }}"
+    password: "{{ db_user_password }}"
+    priv: "{{ database }}.*:{{ priviliges }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    state: present
+  when:
+    - create_database
+    - database is defined
+    - create_db_user
+    - db_user_name is defined
+
+- name: Copiar archivo SQL
+  copy:
+    src: /home/ansible/database/files/tablas.sql
+    dest: /tmp/
+  when: import_sql_file
+
+- name: Ejecutar scipt SQL
+  mysql_db:
+    name: "{{ database }}"
+    state: import
+    target: /tmp/tablas.sql
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  when:
+    - database is defined and create_database
+    - import_sql_file
+
+- name: No permitir conexiones remotas con root
+  mysql_user:
+    check_implicit_admin: true
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    user: root
+    host: localhost
+    state: absent
+
 # Firewall
 
 ## Ejecución de playbook tallerlab
