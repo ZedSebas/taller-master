@@ -185,6 +185,8 @@ Verificación
 > #git status -s <br />
 > #git push origin master <br />
 
+[![Captura-Git-009.png](https://i.postimg.cc/T3JMfNTL/Captura-Git-009.png)](https://postimg.cc/NKFPx49B)
+
 ## Creación de repositorios para roles de tareas requeridas
 
 > #ansible-galaxy init application <br />
@@ -488,7 +490,7 @@ usando 'vi' en /vars se edita el archivo main.yml
 **/database/vars/main.yml**
 ```sh
 ---
-mysql_root_password: "Pass.123"
+mysql_root_password: "ZSe4RFvP84"
 mariadb_socket: /run/mysqld/mysqld.sock
 database: "todo"
 priviliges: "ALL"
