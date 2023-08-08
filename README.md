@@ -333,6 +333,12 @@ en lo que se aprende automatización de podman, generación de imagen y creació
 	jdbcPassword=ZSe4RFvP84
 ```
 
+[![Captura-Ansible-004.png](https://i.postimg.cc/bNnQMXzh/Captura-Ansible-004.png)](https://postimg.cc/ykVggbgQ)
+
+[![Captura-Ansible-005.png](https://i.postimg.cc/Gm1knM2s/Captura-Ansible-005.png)](https://postimg.cc/XpQZwk9V)
+
+[![Captura-Ansible-006.png](https://i.postimg.cc/bwH1yQDV/Captura-Ansible-006.png)](https://postimg.cc/VJvJ40FX)
+
 # WebServer
 
 dentro del rol webserver se crea usando 'vi' en /files el archivo tomcat.service
@@ -540,7 +546,7 @@ usando 'vi' en /tasks se edita el archivo main.yml
 - name: Copiar archivo de conexion
   copy:
     src: /home/ansible/database/files/app.properties
-    dest: /opt/config
+    dest: /opt/config/
     mode: 0755
 
 - name: Creacion de base de datos
