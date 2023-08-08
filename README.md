@@ -44,6 +44,72 @@ Tareas a realizar mediante playbook con Ansible:
 
 Se instalan 3 servidores virtuales:
 
- - Taller Bastion **Servidor de controlador**
+ - Taller Bastion **Servidor de Controlador**
  - Taller Rocky **Servidor Web y de Aplicación**
  - Taller Ubuntu **Servidor de Base de Datos**
+
+[![Captura-Bastion005.png](https://i.postimg.cc/d13Rkh1J/Captura-Bastion005.png)](https://postimg.cc/Vry02Lnh)
+
+[![Captura-Ubuntu005.png](https://i.postimg.cc/DzHQG2bs/Captura-Ubuntu005.png)](https://postimg.cc/mc3FfWj2)
+
+## Particiones
+
+[![Captura-Rocky011.png](https://i.postimg.cc/m2fdqSkM/Captura-Rocky011.png)](https://postimg.cc/JtxcHZb4)
+
+[![Captura-Ubuntu015.png](https://i.postimg.cc/g0X8mfB0/Captura-Ubuntu015.png)](https://postimg.cc/bGPsRFPX)
+
+## Red
+
+[![Captura-Servers002.png](https://i.postimg.cc/mr5jSYKP/Captura-Servers002.png)](https://postimg.cc/nsqqFDFx)
+
+[![Captura-Servers003.png](https://i.postimg.cc/Tw59NyXC/Captura-Servers003.png)](https://postimg.cc/gXd8n2jZ)
+
+[![Captura-Servers004.png](https://i.postimg.cc/KjX56ZGF/Captura-Servers004.png)](https://postimg.cc/8JHWWgfn)
+
+Utilizando nmtui en Rocky y netplan en Ubuntu se verifican y/o establecen ips en las distintas tarjetas de red, en Ubuntu también se habilita el firewall.
+
+> #sudo netplan generate
+
+> #sudo apt install nano
+
+> #sudo nano /etc/netplan/00-installer-config.yaml
+
+network: <br />
+ version: 2 <br />
+ renderer: networkd <br />
+ ethernets: <br />
+  enp0s3: <br />
+   dhcp4: yes <br />
+  enp0s8: <br />
+   dhcp4: no <br />
+   dhcp6: no <br />
+   addresses: [192.168.10.12/24, ] <br />
+   gateway4: 192.168.10.1 <br />
+   nameservers: <br />
+           addresses: [8.8.8.8, 8.8.8.4] <br />
+
+> #sudo netplan apply
+
+> #ip a
+
+---------
+
+> #sudo apt-get update
+
+> #sudo apt-get upgrade
+
+> #sudo apt ufw
+
+> #sudo ufw status
+
+> #sudo ufw default allow outgoing
+
+> #sudo ufw default deny incoming
+
+> #sudo ufw allow ssh
+
+> #sudo ufw enable
+
+> #sudo ufw status
+
+
