@@ -181,7 +181,7 @@ para administrar separadamente un inventario en el que se pueden generar grupos
 
 [![Captura-SSH014.png](https://i.postimg.cc/gJJ7y27c/Captura-SSH014.png)](https://postimg.cc/9461CCVs)
 
-Verificación
+Verificación <br />
 > #git status -s <br />
 > #git push origin master <br />
 
