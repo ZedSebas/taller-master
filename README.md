@@ -110,10 +110,14 @@ Se crearon usuarios ansible de clave 'ansible01' en los tres servidores
 Se les otorgaron permisos de SUDO
 
 Rocky <br />
-> #usermod -aG wheel ansible
+> #usermod -aG wheel ansible <br />
+> #visudo <br />
+  ansible ALL=(ALL) NOPASSWD: ALL <br />
 
 Ubuntu <br />
-> #sudo usermod -aG sudo ansible
+> #sudo usermod -aG sudo ansible <br />
+> #visudo <br />
+  ansible ALL=(ALL:ALL) NOPASSWD: ALL <br />
 
 Verificación 
 > #su - ansible <br />
