@@ -207,7 +207,7 @@ Playbook iniciador el cual lista los roles que serán ejecutados en los miembros
 
 dentro del rol database se crean usando 'vi' en /files los archivos app.properties y tablas.sql
 
-**/files/app.properties**
+**/database/files/app.properties**
 ```sh
 tipoDB=mariadb
 jdbcURL=jdbc:mariadb://localhost:3306/todo
@@ -215,7 +215,7 @@ jdbcUsername=todo
 jdbcPassword=ZSe4RFvP84
 ```
 
-**/files/tablas.sql**
+**/database/files/tablas.sql**
 ```sh
 CREATE TABLE `users` (
   `id` int(3) NOT NULL AUTO_INCREMENT,
@@ -239,7 +239,7 @@ CREATE TABLE `todos` (
 
 usando 'vi' en /vars se edita el archivo main.yml
 
-**/vars/main.yml**
+**/database/vars/main.yml**
 ```sh
 ---
 mysql_root_password: "Pass.123"
@@ -256,7 +256,7 @@ deny_remote_connections: True
 
 usando 'vi' en /task se edita el archivo main.yml
 
-**/task/main.yml**
+**/database/task/main.yml**
 ```sh
 ---
 - name: Instalar Mariadb en Rocky
@@ -360,6 +360,44 @@ usando 'vi' en /task se edita el archivo main.yml
 ```
 
 # Firewall
+
+dentro del rol firewall se edita usando 'vi' en /tasks el archivo main.yml
+
+**/firewall/tasks/main.yml**
+```sh
+---
+- name: Firewalld reglas tomcat http port
+  firewalld:
+    port: 8080/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Rocky"
+   
+- name: Firewalld reglas tomcat https port
+  firewalld:
+    port: 8443/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Rocky"
+
+- name: Firewalld reglas app tcp todo port
+  firewalld:
+    port: 3306/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Rocky"
+    
+- name: Firewalld reglas app udp todo port
+  firewalld:
+    port: 3306/udp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Rocky"
+```
 
 ## Ejecución de playbook tallerlab
 
