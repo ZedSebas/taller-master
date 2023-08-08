@@ -58,7 +58,7 @@ Se instalan 3 servidores virtuales:
 
 [![Captura-Ubuntu015.png](https://i.postimg.cc/g0X8mfB0/Captura-Ubuntu015.png)](https://postimg.cc/bGPsRFPX)
 
-## Red
+## Redes
 
 [![Captura-Servers002.png](https://i.postimg.cc/mr5jSYKP/Captura-Servers002.png)](https://postimg.cc/nsqqFDFx)
 
@@ -94,22 +94,96 @@ network: <br />
 
 ---------
 
-> #sudo apt-get update
+> #sudo apt-get update <br />
+> #sudo apt-get upgrade <br />
+> #sudo apt ufw <br />
+> #sudo ufw status <br />
+> #sudo ufw default allow outgoing <br />
+> #sudo ufw default deny incoming <br />
+> #sudo ufw allow ssh <br />
+> #sudo ufw enable <br />
+> #sudo ufw status <br />
 
-> #sudo apt-get upgrade
+## Usuario para ejecución de tareas
 
-> #sudo apt ufw
+Se crearon usuarios ansible de clave 'ansible01' en los tres servidores 
+Se les otorgaron permisos de SUDO
 
-> #sudo ufw status
+Rocky <br />
+> #usermod -aG wheel ansible
 
-> #sudo ufw default allow outgoing
+Ubuntu <br />
+> #sudo usermod -aG sudo ansible
 
-> #sudo ufw default deny incoming
+Verificación 
+> #su - ansible <br />
+> #sudo ls -la /root <br />
 
-> #sudo ufw allow ssh
+## Instalación de Git, Ansible y establecimiento de clave pública/privada
 
-> #sudo ufw enable
+> #dnf install git -y <br />
+> #dnf install epel-release -y <br />
+> #dnf install ansible -y <br />
 
-> #sudo ufw status
+> #ssh-keygen <br />
+> #ssh-copy-id 192.168.10.4 <br />
+> #ssh-copy-id 192.168.10.12 <br />
 
+[![Captura-SSH001.png](https://i.postimg.cc/280Zvzs6/Captura-SSH001.png)](https://postimg.cc/gn6jbPkF)
 
+> #eval $(ssh-agent) <br />
+> #ssh-add <br />
+
+Verificación
+> #ansible -i 192.168.10.4, all -m ping <br />
+> #ansible -i 192.168.10.12, all -m ping <br />
+
+en /home/ansible
+> #ansible-config init --disabled > ansible.cfg <br />
+
+modificar ansible.cfg con 'vi' cambiar ;inventory=/etc/ansible/hosts por inventory=./inventario-taller 
+para administrar separadamente un inventario en el que se pueden generar grupos
+> #vi inventario-taller <br />
+
+ [ubuntu] <br />
+
+ tallerubuntu ansible_host=192.168.10.12 <br />
+ 
+ [rocky] <br />
+
+ tallerrocky ansible_host=192.168.10.4 <br />
+ 
+ [linux:children] <br />
+	
+ ubuntu <br />
+	
+ rocky <br />
+
+## Distribución de claves entre los servidores del grupo linux usando ansible
+
+> #ansible linux -m authorized_key -a "user=ansible state=present key={{ lookup('file', '/home/ansible/.ssh/id_rsa.pub') }}"
+
+[![Captura-SSH010.png](https://i.postimg.cc/qBLhVJML/Captura-SSH010.png)](https://postimg.cc/hhXPVqmz)
+
+## Configuración de Github
+
+> #git init <br />
+> #git config --global user.name "Sebastián Díaz" <br />
+> #git config --global user.email "ZedSebas@gmail.com" <br />
+> #git config --global core.editor vi <br />
+> #git remote add origin git@github.com:ZedSebas/taller-master.git <br />
+
+## Se crea SSH Key en repositorio de Github para permitir comunicación segura.
+
+[![Captura-SSH014.png](https://i.postimg.cc/gJJ7y27c/Captura-SSH014.png)](https://postimg.cc/9461CCVs)
+
+Verificación
+> #git status -s <br />
+> #git push origin master <br />
+
+## Creación de repositorios para roles de tareas requeridas
+
+> #ansible-galaxy init application <br />
+> #ansible-galaxy init webserver <br />
+> #ansible-galaxy init database <br />
+> #ansible-galaxy init firewall <br />
