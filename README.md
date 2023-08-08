@@ -369,3 +369,10 @@ usando 'vi' en /task se edita el archivo main.yml
 
 Verificación
 
+[![Captura-Ansible-001.png](https://i.postimg.cc/cJChxwrS/Captura-Ansible-001.png)](https://postimg.cc/CZykJZGP)
+
+[![Captura-Ansible-002.png](https://i.postimg.cc/7ZmXrmP9/Captura-Ansible-002.png)](https://postimg.cc/yD30FhZ3)
+
+[![Captura-Ansible-003.png](https://i.postimg.cc/zfQjVvgR/Captura-Ansible-003.png)](https://postimg.cc/nsv7WHTH)
+
+
