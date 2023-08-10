@@ -112,11 +112,13 @@ Se les otorgaron permisos de SUDO
 Rocky <br />
 > #usermod -aG wheel ansible <br />
 > #visudo <br />
+  ##Same thing without a password
   ansible ALL=(ALL) NOPASSWD: ALL <br />
 
 Ubuntu <br />
 > #sudo usermod -aG sudo ansible <br />
 > #visudo <br />
+  #Allow members of group sudo to execute any command
   ansible ALL=(ALL:ALL) NOPASSWD: ALL <br />
 
 Verificación 
