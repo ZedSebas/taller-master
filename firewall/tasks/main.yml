@@ -1,0 +1,32 @@
+---
+- name: Firewalld reglas tomcat http port
+  firewalld:
+    port: 8080/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Rocky"
+
+- name: Firewalld reglas tomcat https port
+  firewalld:
+    port: 8443/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Rocky"
+
+- name: Firewalld reglas app tcp todo port
+  firewalld:
+    port: 3306/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Rocky"
+
+- name: Firewalld reglas app udp todo port
+  firewalld:
+    port: 3306/udp
+    permanent: true
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Rocky"

@@ -1,0 +1,12 @@
+---
+# vars file for database
+mysql_root_password: "ZSe4RFvP84"
+mariadb_socket: /run/mysqld/mysqld.sock
+database: "todo"
+priviliges: "ALL"
+db_user_name: "todo"
+db_user_password: "ZSe4RFvP84"
+create_database: True
+create_db_user: True
+import_sql_file: True
+deny_remote_connections: True

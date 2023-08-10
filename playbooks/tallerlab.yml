@@ -1,0 +1,11 @@
+---
+- name: Principal
+  hosts: linux
+  become: True
+  
+  roles:
+    - { role: /home/ansible/application } 
+    - { role: /home/ansible/webserver }
+    - { role: /home/ansible/database }
+    - { role: /home/ansible/firewall }
+
